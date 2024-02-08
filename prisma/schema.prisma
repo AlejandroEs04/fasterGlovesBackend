@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelos para el producto
+model Product {
+  ID Int @id @default(autoincrement())
+  name String
+  description String
+  typeID Int
+  price Float
+  amount Int
+  imageUrl String
+  detProductSize DetProductSize[]
+  detProductColor DetProductColor[]
+  type Type @relation(fields: [typeID], references: [ID])
+  cart Cart[]
+  productBuy ProductBuy[]
+}
+
+model Size {
+  ID Int @id @default(autoincrement())
+  name String
+  letter String
+  detProductSize DetProductSize[]
+  cart Cart[]
+  produductBuy ProductBuy[]
+}
+
+model Color {
+  ID Int @id @default(autoincrement())
+  name String
+  code String
+  detProductColor DetProductColor[]
+}
+
+model DetProductSize {
+  ID Int @id @default(autoincrement())
+  productID Int
+  sizeID Int 
+  product Product @relation(fields: [productID], references: [ID])
+  size Size @relation(fields: [sizeID], references: [ID])
+}
+
+model DetProductColor {
+  ID Int @id @default(autoincrement())
+  productID Int
+  colorID Int 
+  product Product @relation(fields: [productID], references: [ID])
+  color Color @relation(fields: [colorID], references: [ID])
+}
+
+model Type {
+  ID Int @id @default(autoincrement())
+  name String
+  description String
+  products Product[]
+}
+
+// Modelo para usuario
+model User {
+  ID Int @id @default(autoincrement())
+  name String
+  lastName String
+  password String
+  email String
+  number String
+  token String
+  confirmado Boolean @default(false)
+  address String
+  postalCode String
+  neighborhood String
+  state String
+  city String
+  country String
+  admin Boolean @default(false)
+  cart Cart[]
+  buys Buy[]
+}
+
+model Cart {
+  ID Int @id @default(autoincrement())
+  userID Int
+  productID Int
+  cantidad Int 
+  sizeID Int
+  products Product @relation(fields: [productID], references: [ID])
+  user User @relation(fields: [userID], references: [ID])
+  size Size @relation(fields: [sizeID], references: [ID])
+}
+
+// Modelo para compras
+model Buy {
+  ID Int @id @default(autoincrement())
+  userID Int 
+  amount Int
+  date DateTime
+  parcel Boolean @default(true)
+  active Boolean @default(true)
+  user User @relation(fields: [userID], references: [ID])
+  productos ProductBuy[]
+  delivery Delivery[]
+}
+
+model Delivery {
+  ID Int @id @default(autoincrement())
+  buyID Int
+  received Boolean @default(true)
+  onTheWay Boolean @default(false)
+  delivered Boolean @default(false)
+  buy Buy @relation(fields: [buyID], references: [ID])
+}
+
+model ProductBuy {
+  ID Int @id @default(autoincrement())
+  buyID Int 
+  productID Int
+  cantidad Int 
+  sizeID Int
+  buy Buy @relation(fields: [buyID], references: [ID])
+  product Product @relation(fields: [productID], references: [ID])
+  size Size @relation(fields: [sizeID], references: [ID])
+}
+
+model Article {
+  ID Int @id @default(autoincrement())
+  title String
+  ArticleTypeID Int @unique
+  articlesChild ArticleChild[]
+  type ArticleType @relation(fields: [ArticleTypeID], references: [ID])
+}
+
+model ArticleChild {
+  ID Int @id @default(autoincrement())
+  title String
+  text String
+  ArticleID Int
+  imageUrl String?
+  url String?
+  article Article @relation(fields: [ArticleID], references: [ID])
+}
+
+model ArticleType {
+  ID Int @id @default(autoincrement())
+  seccion String
+  article Article[]
+}
+
