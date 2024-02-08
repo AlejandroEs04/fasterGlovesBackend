@@ -5,11 +5,11 @@ export const emailRegistro = async(datos) => {
 
   // TODO: PASAR LOS DATOS A VARIABLES DE ENTORNO
   const transport = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
+    host: "smtp-relay.brevo.com",
+    port: 587,
     auth: {
-      user: "3b338730057713",
-      pass: "ea1bf9fbc64406"
+      user: "2004.estrada.lopez@gmail.com",
+      pass: "rQ9PwsIb3cNGvYA4"
     }
   });
 
@@ -34,11 +34,11 @@ export const emailForgetPassword = async(datos) => {
 
   // TODO: PASAR LOS DATOS A VARIABLES DE ENTORNO
   const transport = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
+    host: "smtp-relay.brevo.com",
+    port: 587,
     auth: {
-      user: "3b338730057713",
-      pass: "ea1bf9fbc64406"
+      user: "2004.estrada.lopez@gmail.com",
+      pass: "rQ9PwsIb3cNGvYA4"
     }
   });
 
@@ -50,7 +50,7 @@ export const emailForgetPassword = async(datos) => {
     text: "Restablece tu contraseña",
     html: `
       <p>Hola: ${name} Has solicitado restablecer tu contraseña en FazterShop</p>
-      <p>Ingres al siguiente enlace para poder restablecer tu contraseña:</p>
+      <p>Ingresa al siguiente enlace para poder restablecer tu contraseña:</p>
       <a href="${process.env.FRONTEND_URL}/reset-password/${token}">Restablecer Password</a>
 
       <p>Si tu no solicitaste restablecer tu password, ignora este mensaje</p>
