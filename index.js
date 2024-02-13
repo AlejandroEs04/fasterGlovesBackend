@@ -15,10 +15,7 @@ dotenv.config();
 
 // Configurar Cors
 const whiteList = [
-    process.env.FRONTEND_URL,
-    'https://faster-guantes-project-agcn.vercel.app/',
-    'https://faster-guantes-project-agcn-git-main-alejandroes04.vercel.app/', 
-    'https://faster-guantes-project-agcn-29qd214o1-alejandroes04.vercel.app/'
+    process.env.FRONTEND_URL
 ];
 
 const corsOptions = {
