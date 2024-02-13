@@ -11,6 +11,23 @@ const client = new paypal.core.PayPalHttpClient(envirement)
 
 const getBuy = async(req, res) => {
     const { user } = req;
+    const { id } = req.params;
+
+    try {
+        const buy = await prisma.buy.findMany({
+            where: {
+                ID: id
+            }
+        })
+
+        console.log(buy)
+    } catch (error) {
+        
+    }
+}
+
+const getUserBuys = async(req, res) => {
+    const { user } = req;
 
     try {
         const buys = await prisma.buy.findMany({
@@ -180,6 +197,7 @@ const updateBuy = async(req, res) => {
 
 export {
     getBuy,
+    getUserBuys,
     getAllBuy,
     createOrderPaypal,
     completeBuy,
