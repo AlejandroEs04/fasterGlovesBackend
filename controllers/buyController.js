@@ -14,13 +14,27 @@ const getBuy = async(req, res) => {
     const { id } = req.params;
 
     try {
-        const buy = await prisma.buy.findMany({
+        const buy = await prisma.buy.findFirst({
             where: {
-                ID: id
+                ID: +id
+            },
+            include: {
+                productos: {
+                    include: {
+                        size: true,
+                        product: {
+                            include: {
+                                type: true
+                            }
+                        }
+                    }
+                },
+                delivery: true,
+                user: true
             }
         })
 
-        console.log(buy)
+        return res.status(200).json({msg: "Ok", buy});
     } catch (error) {
         
     }

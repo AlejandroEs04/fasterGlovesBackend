@@ -47,7 +47,10 @@ const register = async(req, res) => {
                 state: req.body.state ?? '',
                 city: req.body.city ?? '',
                 country: req.body.country ?? '',
-                postalCode: req.body.postalCode ?? ''
+                postalCode: req.body.postalCode ?? '',
+                externNumber: +req.body.externNumber ?? 0,
+                internNumber: +req.body.internNumber ?? 0,
+                street: req.body.street ?? '',
             }
         })
 
@@ -98,7 +101,10 @@ const auth = async(req, res) => {
                 state: user.state,
                 city: user.city,
                 country: user.country,
-                postalCode: user.postalCode
+                postalCode: user.postalCode,
+                externNumber: user.externNumber,
+                internNumber: user.internNumber,
+                street: user.street,
             },
             token: await generarJWT(user.ID),
             admin: user.admin
@@ -241,7 +247,10 @@ const update = async(req, res) => {
         neighborhood,
         state,
         city, 
-        country
+        country,
+        internNumber,
+        externNumber,
+        street
     } = req.body
 
     const { user } = req;
@@ -256,6 +265,9 @@ const update = async(req, res) => {
     user.state = state ?? user.state;
     user.city = city ?? user.city;
     user.country = country ?? user.country;
+    user.internNumber = internNumber ?? user.internNumber;
+    user.externNumber = externNumber ?? user.externNumber;
+    user.street = street ?? user.street;
 
     try {
         const userAct = await prisma.user.update({
@@ -273,6 +285,9 @@ const update = async(req, res) => {
                 state: user.state,
                 city: user.city,
                 country: user.country,
+                internNumber: +user.internNumber,
+                externNumber: +user.externNumber,
+                street: user.street,
             }
         })
 
@@ -314,6 +329,9 @@ const getCart = async(req, res) => {
                         postalCode: true,
                         city: true,
                         country: true,
+                        externNumber: true,
+                        internNumber: true,
+                        street: true
                     }
                 },
                 size: true
@@ -383,6 +401,9 @@ const addCart = async(req, res) => {
                         postalCode: true,
                         city: true,
                         country: true,
+                        internNumber: true,
+                        externNumber: true,
+                        street: true,
                     }
                 },
                 size: true
