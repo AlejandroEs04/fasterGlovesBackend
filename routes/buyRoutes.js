@@ -4,7 +4,7 @@ const router = express.Router();
 import { createOrderPaypal, completeBuy, getUserBuys, getAllBuy, updateBuy, getBuy } from '../controllers/buyController.js';
 import checkAuth from '../middleware/checkAuth.js';
 
-router.route('/').get(checkAuth, getUserBuys).post(checkAuth, createOrderPaypal);
+router.route('/').get(checkAuth, getBuy).post(checkAuth, createOrderPaypal);
 router.get('/find/:id', checkAuth, getBuy)
 router.post('/complete', checkAuth, completeBuy);
 router.get('/admin', checkAuth, getAllBuy);

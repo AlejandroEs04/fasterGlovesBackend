@@ -26,7 +26,10 @@ const checkAuth = async(req, res, next) => {
                     state: true,
                     city: true,
                     country: true,
-                    admin: true
+                    admin: true,
+                    externNumber: true, 
+                    internNumber: true,
+                    street: true
                 }
             })
         } catch (error) {

@@ -76,11 +76,14 @@ model User {
   token String
   confirmado Boolean @default(false)
   address String
+  street String
   postalCode String
   neighborhood String
   state String
   city String
   country String
+  externNumber Int
+  internNumber Int
   admin Boolean @default(false)
   cart Cart[]
   buys Buy[]
