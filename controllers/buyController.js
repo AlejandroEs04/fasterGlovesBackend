@@ -3,12 +3,6 @@ import paypal from '@paypal/checkout-server-sdk'
 
 const prisma = new PrismaClient()
 
-const clientId = process.env.PAYPAL_CLIENT_ID;
-const clientSecret = process.env.PAYPAL_SECRET_KEY;
-
-const envirement = new paypal.core.SandboxEnvironment(clientId, clientSecret);
-const client = new paypal.core.PayPalHttpClient(envirement)
-
 const getBuy = async(req, res) => {
     const { user } = req;
     const { id } = req.params;
@@ -69,6 +63,11 @@ const getAllBuy = async(req, res) => {
 
 const createOrderPaypal = async(req, res) => {
     const { total, cantidad } = req.body;
+
+    const clientId = process.env.PAYPAL_CLIENT_ID;
+    const clientSecret = process.env.PAYPAL_SECRET_KEY;
+    const envirement = new paypal.core.LiveEnvironment(clientId, clientSecret)
+    const client = new paypal.core.PayPalHttpClient(envirement)
 
     let request = new paypal.orders.OrdersCreateRequest();
 
