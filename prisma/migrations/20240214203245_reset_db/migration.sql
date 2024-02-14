@@ -67,11 +67,14 @@ CREATE TABLE "User" (
     "token" TEXT NOT NULL,
     "confirmado" BOOLEAN NOT NULL DEFAULT false,
     "address" TEXT NOT NULL,
+    "street" TEXT NOT NULL,
     "postalCode" TEXT NOT NULL,
     "neighborhood" TEXT NOT NULL,
     "state" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "country" TEXT NOT NULL,
+    "externNumber" INTEGER NOT NULL,
+    "internNumber" INTEGER NOT NULL,
     "admin" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("ID")
@@ -83,9 +86,76 @@ CREATE TABLE "Cart" (
     "userID" INTEGER NOT NULL,
     "productID" INTEGER NOT NULL,
     "cantidad" INTEGER NOT NULL,
+    "sizeID" INTEGER NOT NULL,
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("ID")
 );
+
+-- CreateTable
+CREATE TABLE "Buy" (
+    "ID" SERIAL NOT NULL,
+    "userID" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "parcel" BOOLEAN NOT NULL DEFAULT true,
+    "active" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "Buy_pkey" PRIMARY KEY ("ID")
+);
+
+-- CreateTable
+CREATE TABLE "Delivery" (
+    "ID" SERIAL NOT NULL,
+    "buyID" INTEGER NOT NULL,
+    "received" BOOLEAN NOT NULL DEFAULT true,
+    "onTheWay" BOOLEAN NOT NULL DEFAULT false,
+    "delivered" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "Delivery_pkey" PRIMARY KEY ("ID")
+);
+
+-- CreateTable
+CREATE TABLE "ProductBuy" (
+    "ID" SERIAL NOT NULL,
+    "buyID" INTEGER NOT NULL,
+    "productID" INTEGER NOT NULL,
+    "cantidad" INTEGER NOT NULL,
+    "sizeID" INTEGER NOT NULL,
+
+    CONSTRAINT "ProductBuy_pkey" PRIMARY KEY ("ID")
+);
+
+-- CreateTable
+CREATE TABLE "Article" (
+    "ID" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "ArticleTypeID" INTEGER NOT NULL,
+
+    CONSTRAINT "Article_pkey" PRIMARY KEY ("ID")
+);
+
+-- CreateTable
+CREATE TABLE "ArticleChild" (
+    "ID" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "text" TEXT NOT NULL,
+    "ArticleID" INTEGER NOT NULL,
+    "imageUrl" TEXT,
+    "url" TEXT,
+
+    CONSTRAINT "ArticleChild_pkey" PRIMARY KEY ("ID")
+);
+
+-- CreateTable
+CREATE TABLE "ArticleType" (
+    "ID" SERIAL NOT NULL,
+    "seccion" TEXT NOT NULL,
+
+    CONSTRAINT "ArticleType_pkey" PRIMARY KEY ("ID")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Article_ArticleTypeID_key" ON "Article"("ArticleTypeID");
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_typeID_fkey" FOREIGN KEY ("typeID") REFERENCES "Type"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -107,3 +177,27 @@ ALTER TABLE "Cart" ADD CONSTRAINT "Cart_productID_fkey" FOREIGN KEY ("productID"
 
 -- AddForeignKey
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Cart" ADD CONSTRAINT "Cart_sizeID_fkey" FOREIGN KEY ("sizeID") REFERENCES "Size"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Buy" ADD CONSTRAINT "Buy_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Delivery" ADD CONSTRAINT "Delivery_buyID_fkey" FOREIGN KEY ("buyID") REFERENCES "Buy"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProductBuy" ADD CONSTRAINT "ProductBuy_buyID_fkey" FOREIGN KEY ("buyID") REFERENCES "Buy"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProductBuy" ADD CONSTRAINT "ProductBuy_productID_fkey" FOREIGN KEY ("productID") REFERENCES "Product"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProductBuy" ADD CONSTRAINT "ProductBuy_sizeID_fkey" FOREIGN KEY ("sizeID") REFERENCES "Size"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Article" ADD CONSTRAINT "Article_ArticleTypeID_fkey" FOREIGN KEY ("ArticleTypeID") REFERENCES "ArticleType"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ArticleChild" ADD CONSTRAINT "ArticleChild_ArticleID_fkey" FOREIGN KEY ("ArticleID") REFERENCES "Article"("ID") ON DELETE RESTRICT ON UPDATE CASCADE;
