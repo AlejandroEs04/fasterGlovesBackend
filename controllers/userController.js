@@ -417,21 +417,13 @@ const addCart = async(req, res) => {
 }
 
 const deleteProductCart = async(req, res) => {
-    const {productID, sizeID} = req.body
+    const { ID } = req.body
     const { user } = req;
 
     try {
-        const productCart = await prisma.cart.findFirst({
-            where: {
-                userID: user.ID,
-                productID,
-                sizeID
-            }
-        })
-
         await prisma.cart.delete({
             where: {
-                ID: productCart.ID
+                ID
             }
         })
 
