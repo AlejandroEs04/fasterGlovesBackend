@@ -43,5 +43,5 @@ app.use('/api/articles', articlesRoutes);
 const PORT = process.env.PORT || 4000
 
 app.listen(PORT, () => {
-    console.log(`El servidor esta corriendo en http://localhost:${PORT}/`);
+    console.log(`El servidor esta corriendo en el puerto ${PORT}`);
 })

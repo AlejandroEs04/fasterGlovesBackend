@@ -97,7 +97,17 @@ const create = async(req, res) => {
     return
 }
 
+const update = async(req, res) => {
+
+}
+
+const deleteOne = async(req, res) => {
+
+}
+
 export {
     findAll,
-    create  
+    create, 
+    update,
+    deleteOne 
 }
