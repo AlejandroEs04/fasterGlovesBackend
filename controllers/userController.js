@@ -48,9 +48,9 @@ const register = async(req, res) => {
                 city: req.body.city ?? '',
                 country: req.body.country ?? '',
                 postalCode: req.body.postalCode ?? '',
-                externNumber: +req.body.externNumber ?? 0,
-                internNumber: +req.body.internNumber ?? 0,
-                street: req.body.street ?? '',
+                externNumber: 0,
+                internNumber: 0,
+                street: req.body.street ?? ''
             }
         })
 
@@ -102,8 +102,8 @@ const auth = async(req, res) => {
                 city: user.city,
                 country: user.country,
                 postalCode: user.postalCode,
-                externNumber: user.externNumber,
-                internNumber: user.internNumber,
+                externNumber: +user.externNumber,
+                internNumber: +user.internNumber,
                 street: user.street,
             },
             token: await generarJWT(user.ID),

@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "externNumber" DROP DEFAULT,
-ALTER COLUMN "internNumber" DROP DEFAULT;

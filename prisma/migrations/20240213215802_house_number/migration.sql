@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "externNumber" INTEGER NOT NULL DEFAULT 0,
-ADD COLUMN     "internNumber" INTEGER NOT NULL DEFAULT 0;
