@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import deleteSize from "../helpers/eliminarSize.js";
 
 const prisma = new PrismaClient()
 
@@ -72,19 +73,19 @@ const create = async(req, res) => {
 
         if(product.l) {
             await prisma.detProductSize.create({
-             data: {
-                 productID: res.ID,
-                 sizeID: 4
-             }
+                data: {
+                    productID: res.ID,
+                    sizeID: 4
+                }
             }) 
         }
 
         if(product.xl) {
             await prisma.detProductSize.create({
-             data: {
-                 productID: res.ID,
-                 sizeID: 5
-             }
+                data: {
+                    productID: res.ID,
+                    sizeID: 5
+                }
             }) 
         }
 
@@ -98,11 +99,112 @@ const create = async(req, res) => {
 }
 
 const update = async(req, res) => {
+    const product = await req.body.product
 
+    try {
+        const sizeProduct = await prisma.detProductSize.findMany({
+            where: {
+                productID: product.ID
+            }
+        })
+
+        if(product.xs) {
+            if(!sizeProduct.filter(size => size.sizeID === 1).length > 0) {
+                await prisma.detProductSize.create({
+                    data: {
+                        productID: product.ID,
+                        sizeID: 1
+                    }
+                }) 
+            } 
+        } else {
+            if(sizeProduct.filter(size => size.sizeID === 1).length > 0) {
+                deleteSize(product.ID, 1)
+            }
+        }
+
+        if(product.s) {
+            if(!sizeProduct.filter(size => size.sizeID === 2).length > 0) {
+                await prisma.detProductSize.create({
+                    data: {
+                        productID: product.ID,
+                        sizeID: 2
+                    }
+                }) 
+            }
+        } else {
+            if(sizeProduct.filter(size => size.sizeID === 2).length > 0) {
+                deleteSize(product.ID, 2)
+            }
+        }
+
+        if(product.m) {
+            if(!sizeProduct.filter(size => size.sizeID === 3).length > 0) {
+                await prisma.detProductSize.create({
+                    data: {
+                        productID: product.ID,
+                        sizeID: 3
+                    }
+                }) 
+            }
+        } else {
+            if(sizeProduct.filter(size => size.sizeID === 3).length > 0) {
+                deleteSize(product.ID, 3)
+            }
+        }
+
+        if(product.l) {
+            if(!sizeProduct.filter(size => size.sizeID === 4).length > 0) {
+                await prisma.detProductSize.create({
+                    data: {
+                        productID: product.ID,
+                        sizeID: 4
+                    }
+                }) 
+            }
+        } else {
+            if(sizeProduct.filter(size => size.sizeID === 4).length > 0) {
+                deleteSize(product.ID, 4)
+            }
+        }
+
+        if(product.xl) {
+            if(!sizeProduct.filter(size => size.sizeID === 5).length > 0) {
+                await prisma.detProductSize.create({
+                    data: {
+                        productID: product.ID,
+                        sizeID: 5
+                    }
+                }) 
+            }
+        } else {
+            if(sizeProduct.filter(size => size.sizeID === 5).length > 0) {
+                deleteSize(product.ID, 5)
+            }
+        }
+
+        await prisma.product.update({
+            where: {
+                ID: product.ID
+            },
+            data: {
+                name: product.name,
+                price: +product.price,
+                amount: +product.amount,
+                typeID: +product.typeID,
+                description: product.description,
+                imageUrl: product.imageURL
+            }
+        })
+
+        return res.status(200).json({msg: 'Producto Actualizado Correctamente'});
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const deleteOne = async(req, res) => {
-
+    
 }
 
 export {
