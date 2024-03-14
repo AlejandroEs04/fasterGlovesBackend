@@ -32,6 +32,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+
 // Routing 
 app.use('/api/products', productoRoutes);
 app.use('/api/types', typesRoutes);

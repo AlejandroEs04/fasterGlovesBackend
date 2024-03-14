@@ -21,6 +21,7 @@ model Product {
   imageUrl String
   detProductSize DetProductSize[]
   detProductColor DetProductColor[]
+  active Boolean @default(true)
   type Type @relation(fields: [typeID], references: [ID])
   cart Cart[]
   productBuy ProductBuy[]

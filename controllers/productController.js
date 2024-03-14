@@ -204,7 +204,19 @@ const update = async(req, res) => {
 }
 
 const deleteOne = async(req, res) => {
-    
+    const {id} = await req.params
+
+    try {
+        await prisma.product.update({
+            where: {
+                ID: +id
+            }
+        })
+
+        res.status(200).json({msg: 'Producto Eliminado Correctamente'})
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export {
