@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import paypal from '@paypal/checkout-server-sdk'
+import { emailBuyComplete, emailBuyCompleteAdmin, emailDelivered, emailOnTheWay } from "../helpers/email.js";
 
 const prisma = new PrismaClient()
 
 const getBuy = async(req, res) => {
-    const { user } = req;
     const { id } = req.params;
 
     try {
@@ -30,17 +30,17 @@ const getBuy = async(req, res) => {
 
         return res.status(200).json({msg: "Ok", buy});
     } catch (error) {
-        
+        console.log(error)
     }
 }
 
 const getUserBuys = async(req, res) => {
     const { user } = req;
-
+    
     try {
         const buys = await prisma.buy.findMany({
             where: {
-                userID: user.ID
+                userID: +user.ID
             },
             include: {
                 user: true,
@@ -153,6 +153,22 @@ const completeBuy = async(req, res) => {
                 }
             })
 
+            emailBuyComplete({
+                name: user.name + ' ' + user.lastName,
+                email: user.email, 
+                address: user.street + ' ' + user.externNumber + ', ' + user.neighborhood + ', ' + user.postalCode + ', ' + user.city, 
+                buyID: buy.ID
+            })
+
+            emailBuyCompleteAdmin({
+                name: user.name + ' ' + user.lastName,
+                email: user.email, 
+                phone: user.number,
+                address: user.street + ' ' + user.externNumber + ', ' + user.neighborhood + ', ' + user.postalCode + ', ' + user.city, 
+                buyID: buy.ID,
+                date: fecha
+            })
+
             return res.status(200).json({msg: "Muchas gracias por su compra"});
         }
     } catch (error) {
@@ -163,8 +179,7 @@ const completeBuy = async(req, res) => {
 const updateBuy = async(req, res) => {
     const { id } = req.params;
     const data = req.body
-
-    console.log(data)
+    const { user } = req
 
     try {
         if(data.onTheWay) {
@@ -181,6 +196,13 @@ const updateBuy = async(req, res) => {
                 data: {
                     onTheWay: true
                 }
+            })
+
+            emailOnTheWay({
+                name: user.name + ' ' + user.lastName,
+                email: user.email, 
+                address: user.street + ' ' + user.externNumber + ', ' + user.neighborhood + ', ' + user.postalCode + ', ' + user.city, 
+                buyID: id
             })
 
             return res.status(200).json({msg: "El pedido ha sido enviado"});
@@ -200,6 +222,13 @@ const updateBuy = async(req, res) => {
                 }
             })
 
+            emailDelivered({
+                name: user.name + ' ' + user.lastName,
+                email: user.email, 
+                address: user.street + ' ' + user.externNumber + ', ' + user.neighborhood + ', ' + user.postalCode + ', ' + user.city, 
+                buyID: id
+            })
+
             return res.status(200).json({msg: "El pedido ha sido entregado"});
         }
     } catch (error) {
@@ -208,11 +237,35 @@ const updateBuy = async(req, res) => {
     
 }
 
+const deleteBuy = async() => {
+    const { id } = req.params
+
+    try {
+        await prisma.delivery.deleteMany({
+            where: {
+                buyID: +id
+            }
+        })
+
+        await prisma.buy.delete({
+            where: {
+                ID: +id
+            }
+        })
+
+        return res.status(200).json({msg: "Pedido eliminado correctamente"});
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({msg: "Hubo un error en el servidor"});
+    }
+}
+
 export {
     getBuy,
     getUserBuys,
     getAllBuy,
     createOrderPaypal,
     completeBuy,
-    updateBuy
+    updateBuy,
+    deleteBuy
 }
