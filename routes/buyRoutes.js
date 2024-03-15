@@ -9,5 +9,6 @@ router.get('/find/:id', checkAuth, getBuy)
 router.post('/complete', checkAuth, completeBuy);
 router.get('/admin', checkAuth, getAllBuy);
 router.post('/update/:id', checkAuth, updateBuy);
+router.route('/admin/:id').put(checkAuth, updateBuy).delete(checkAuth, deleteBuy)
 
 export default router;

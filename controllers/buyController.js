@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import paypal from '@paypal/checkout-server-sdk'
 import { emailBuyComplete, emailBuyCompleteAdmin, emailDelivered, emailOnTheWay } from "../helpers/email.js";
+import captureOrder from "../helpers/PayPalCapture.js";
 
 const prisma = new PrismaClient()
 
@@ -101,19 +102,20 @@ const createOrderPaypal = async(req, res) => {
     try {
         const response = await client.execute(request);
 
-        return res.status(200).json({id: response.result.id})
+        return res.status(200).json({response})
     } catch (error) {
         console.log(error)
     }
 }
 
 const completeBuy = async(req, res) => {
-    const { total } = req.body;
+    const { total, orderID } = req.body;
     const { user } = req;
-
     const fecha = Date.now()
 
     try {
+        await captureOrder(orderID)
+    
         const cart = await prisma.cart.findMany({
             where: {
                 userID: user.ID
