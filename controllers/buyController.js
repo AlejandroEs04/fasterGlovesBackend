@@ -239,10 +239,15 @@ const updateBuy = async(req, res) => {
     
 }
 
-const deleteBuy = async() => {
+const deleteBuy = async(req, res) => {
     const { id } = req.params
 
     try {
+        await prisma.productBuy.deleteMany({
+            where: {
+                buyID: +id
+            }
+        })
         await prisma.delivery.deleteMany({
             where: {
                 buyID: +id
